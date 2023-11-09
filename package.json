@@ -1,0 +1,31 @@
+{
+  "name": "@kumanote/quick-marquee",
+  "private": true,
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "author": "h-shoji@kumanote.info",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "core-js": "^3.33.2",
+    "rollup": "^4.3.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "example": "rollup example/example.ts --file example/example.js --format iife --p typescript",
+    "build": "rollup -c rollup.config.mjs"
+  },
+  "browserslist": [
+    "> 0.2%",
+    "last 2 versions",
+    "not IE 11"
+  ]
+}

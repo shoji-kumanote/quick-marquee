@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../dist/quick-marquee.min.js" defer></script>
+    <script src="./example.js" defer></script>
+    <style>
+      .quick-marquee {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        border: 1px solid currentColor;
+        width: 10em;
+      }
+      .quick-marquee > * {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+
+      #multipleMargin > * {
+        margin-right: 1em;
+      }
+
+      #multipleGap {
+        gap: 1em;
+      }
+
+      #element {
+        padding: 1em;
+        gap: 1em;
+      }
+
+      #longText {
+        width: auto;
+      }
+
+      #longText span {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>quick-marquee</h1>
+
+    <h2>standard</h2>
+
+    <div id="standard" class="quick-marquee">
+      <p>[quick-marquee]</p>
+    </div>
+
+    <h2>multiple elements</h2>
+
+    <div id="multiple" class="quick-marquee">
+      <p>[quick-marquee 1]</p>
+      <p>[quick-marquee 2]</p>
+      <p>[quick-marquee 3]</p>
+      <p>[quick-marquee 4]</p>
+    </div>
+
+    <h2>multiple elements with margin</h2>
+
+    <div id="multipleMargin" class="quick-marquee">
+      <p>[quick-marquee 1]</p>
+      <p>[quick-marquee 2]</p>
+      <p>[quick-marquee 3]</p>
+      <p>[quick-marquee 4]</p>
+    </div>
+
+    <h2>multiple elements with gap</h2>
+
+    <div id="multipleGap" class="quick-marquee">
+      <p>[quick-marquee 1]</p>
+      <p>[quick-marquee 2]</p>
+      <p>[quick-marquee 3]</p>
+      <p>[quick-marquee 4]</p>
+    </div>
+
+    <h2>reverse</h2>
+
+    <div id="reverse" class="quick-marquee">
+      <p>[quick-marquee 1]</p>
+      <p>[quick-marquee 2]</p>
+      <p>[quick-marquee 3]</p>
+      <p>[quick-marquee 4]</p>
+    </div>
+
+    <h2>slow down on hover</h2>
+
+    <div id="hover" class="quick-marquee">
+      <p>[quick-marquee 1]</p>
+      <p>[quick-marquee 2]</p>
+      <p>[quick-marquee 3]</p>
+      <p>[quick-marquee 4]</p>
+    </div>
+
+    <h2>any element</h2>
+
+    <div id="element" class="quick-marquee">
+      <a href="https://www.example.com/" target="_blank" ref="noopener"
+        >anchor</a
+      >
+      <table border="1">
+        <tbody>
+          <tr>
+            <td>table</td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button">button</button>
+    </div>
+
+    <h2>long text</h2>
+
+    <div id="longText" class="quick-marquee">
+      <p>
+        <span>Lorem</span> ipsum, dolor sit amet consectetur adipisicing elit.
+        Commodi maiores accusantium sunt natus doloribus nisi nobis nihil
+        assumenda. Qui repellat quas nobis quo dolorem eligendi tempore
+        molestias laborum beatae labore!
+      </p>
+    </div>
+  </body>
+</html>
