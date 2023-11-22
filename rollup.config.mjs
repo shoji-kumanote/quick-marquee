@@ -61,4 +61,17 @@ const minified = {
   plugins: [...plugins, terser()],
 };
 
-export default [base, minified];
+const forDocs = {
+  input,
+  output: [
+    {
+      name: "QuickMarquee",
+      file: "docs/quick-marquee.min.js",
+      format: "iife",
+      banner,
+    },
+  ],
+  plugins: [...plugins, terser()],
+};
+
+export default [base, minified, forDocs];
