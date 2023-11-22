@@ -1,6 +1,6 @@
 
 /**
- * quick-marquee.js - 0.1.0
+ * quick-marquee.js - 0.1.1
  *
  * @license MIT
  */
