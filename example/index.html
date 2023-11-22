@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="../dist/quick-marquee.min.js" defer></script>
-    <script src="./example.js" defer></script>
     <style>
       .quick-marquee {
         display: flex;
@@ -38,6 +36,14 @@
 
       #longText span {
         background-color: red;
+      }
+      #speedCheck {
+        width: 60px;
+      }
+      #speedCheck > div {
+        height: 60px;
+        width: 60px;
+        background: linear-gradient(90deg, #f00, #0f0);
       }
     </style>
   </head>
@@ -121,5 +127,36 @@
         molestias laborum beatae labore!
       </p>
     </div>
+
+    <h2>speed check</h2>
+
+    <div id="speedCheck" class="quick-marquee">
+      <div></div>
+    </div>
+
+    <script src="../dist/quick-marquee.min.js"></script>
+    <script>
+      new QuickMarquee("#standard").start();
+      new QuickMarquee("#multiple").start();
+      new QuickMarquee("#multipleMargin").start();
+      new QuickMarquee("#multipleGap").start();
+      new QuickMarquee("#reverse", { pixelsPerFrame: -0.5 }).start();
+      new QuickMarquee("#element").start();
+      new QuickMarquee("#longText").start();
+      new QuickMarquee("#speedCheck", {
+        pixelsPerFrame: 1,
+      }).start();
+
+      const hover = document.getElementById("hover");
+      if (hover) {
+        const hoverQm = new QuickMarquee(hover).start();
+        hover.addEventListener("mouseenter", () => {
+          hoverQm.pixelsPerFrame = 0.2;
+        });
+        hover.addEventListener("mouseleave", () => {
+          hoverQm.pixelsPerFrame = 0.5;
+        });
+      }
+    </script>
   </body>
 </html>
