@@ -1,6 +1,6 @@
 
 /**
- * quick-marquee.js - 1.0.0
+ * quick-marquee.js - 0.1.0
  *
  * @license MIT
  */
@@ -147,6 +147,8 @@ var QuickMarquee = (function () {
   };
   var _itemSources = /*#__PURE__*/new WeakMap();
   var _busy = /*#__PURE__*/new WeakMap();
+  var _first = /*#__PURE__*/new WeakMap();
+  var _ms = /*#__PURE__*/new WeakMap();
   var _running = /*#__PURE__*/new WeakMap();
   var _items = /*#__PURE__*/new WeakMap();
   var _totalWidth = /*#__PURE__*/new WeakMap();
@@ -172,6 +174,14 @@ var QuickMarquee = (function () {
         writable: true,
         value: void 0
       });
+      _classPrivateFieldInitSpec(this, _first, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _ms, {
+        writable: true,
+        value: void 0
+      });
       _classPrivateFieldInitSpec(this, _running, {
         writable: true,
         value: void 0
@@ -192,6 +202,8 @@ var QuickMarquee = (function () {
       this.pixelsPerFrame = (_options$pixelsPerFra = options === null || options === void 0 ? void 0 : options.pixelsPerFrame) !== null && _options$pixelsPerFra !== void 0 ? _options$pixelsPerFra : DEFAULT_OPTIONS.pixelsPerFrame;
       _classPrivateFieldSet(this, _itemSources, this.target !== null ? Array.from(this.target.querySelectorAll(":scope > *")) : []);
       _classPrivateFieldSet(this, _busy, false);
+      _classPrivateFieldSet(this, _first, true);
+      _classPrivateFieldSet(this, _ms, 0);
       _classPrivateFieldSet(this, _running, false);
       _classPrivateFieldSet(this, _items, []);
       _classPrivateFieldSet(this, _totalWidth, 0);
@@ -207,9 +219,10 @@ var QuickMarquee = (function () {
       value: function start() {
         var _this2 = this;
         if (_classPrivateFieldGet(this, _running)) return this;
+        _classPrivateFieldSet(this, _first, true);
         _classPrivateFieldSet(this, _running, true);
-        window.requestAnimationFrame(function () {
-          return _classPrivateMethodGet(_this2, _update, _update2).call(_this2);
+        window.requestAnimationFrame(function (ms) {
+          return _classPrivateMethodGet(_this2, _update, _update2).call(_this2, ms);
         });
         return this;
       }
@@ -242,15 +255,18 @@ var QuickMarquee = (function () {
       return a + b;
     }, 0);
     var containerWidth = this.target.offsetWidth;
+    console.debug(this.target, totalWidth);
     var items = [];
     var width = 0;
     var index = 0;
-    while (width < containerWidth + totalWidth) {
-      var item = _classPrivateFieldGet(this, _itemSources)[index].cloneNode(true);
-      item.style.width = "".concat(widths[index], "px");
-      items.push(item);
-      width += fullWidths[index];
-      index = (index + 1) % widths.length;
+    if (totalWidth > 0) {
+      while (width < containerWidth + totalWidth) {
+        var item = _classPrivateFieldGet(this, _itemSources)[index].cloneNode(true);
+        item.style.width = "".concat(widths[index], "px");
+        items.push(item);
+        width += fullWidths[index];
+        index = (index + 1) % widths.length;
+      }
     }
     _classPrivateFieldSet(this, _items, items);
     _classPrivateFieldSet(this, _totalWidth, totalWidth);
@@ -262,13 +278,20 @@ var QuickMarquee = (function () {
     _classPrivateFieldSet(this, _offset, _classPrivateFieldGet(this, _offset) % _classPrivateFieldGet(this, _totalWidth));
     _classPrivateFieldSet(this, _busy, false);
   }
-  function _update2() {
+  function _update2(ms) {
     var _this4 = this;
-    if (_classPrivateFieldGet(this, _running)) window.requestAnimationFrame(function () {
-      return _classPrivateMethodGet(_this4, _update, _update2).call(_this4);
+    if (_classPrivateFieldGet(this, _running)) window.requestAnimationFrame(function (x) {
+      return _classPrivateMethodGet(_this4, _update, _update2).call(_this4, x);
     });
     if (_classPrivateFieldGet(this, _busy)) return;
-    _classPrivateFieldSet(this, _offset, this.pixelsPerFrame > 0 ? (_classPrivateFieldGet(this, _offset) + this.pixelsPerFrame) % _classPrivateFieldGet(this, _totalWidth) : (_classPrivateFieldGet(this, _offset) + _classPrivateFieldGet(this, _totalWidth) + this.pixelsPerFrame) % _classPrivateFieldGet(this, _totalWidth));
+    if (_classPrivateFieldGet(this, _first)) {
+      _classPrivateFieldSet(this, _ms, ms);
+      _classPrivateFieldSet(this, _first, false);
+      return;
+    }
+    var scale = (ms - _classPrivateFieldGet(this, _ms)) / (1000 / 60);
+    _classPrivateFieldSet(this, _ms, ms);
+    _classPrivateFieldSet(this, _offset, this.pixelsPerFrame > 0 ? (_classPrivateFieldGet(this, _offset) + this.pixelsPerFrame * scale) % _classPrivateFieldGet(this, _totalWidth) : (_classPrivateFieldGet(this, _offset) + _classPrivateFieldGet(this, _totalWidth) + this.pixelsPerFrame * scale) % _classPrivateFieldGet(this, _totalWidth));
     _classPrivateFieldGet(this, _items).forEach(function (x) {
       x.style.transform = "translate(".concat(-_classPrivateFieldGet(_this4, _offset), "px, 0)");
     });

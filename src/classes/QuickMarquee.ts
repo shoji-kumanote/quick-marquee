@@ -16,6 +16,8 @@ export class QuickMarquee {
   readonly #itemSources: HTMLElement[];
 
   #busy: boolean;
+  #first: boolean;
+  #ms: number;
   #running: boolean;
   #items: HTMLElement[];
   #totalWidth: number;
@@ -33,6 +35,8 @@ export class QuickMarquee {
         : [];
 
     this.#busy = false;
+    this.#first = true;
+    this.#ms = 0;
     this.#running = false;
     this.#items = [];
     this.#totalWidth = 0;
@@ -51,8 +55,9 @@ export class QuickMarquee {
   start(): this {
     if (this.#running) return this;
 
+    this.#first = true;
     this.#running = true;
-    window.requestAnimationFrame(() => this.#update());
+    window.requestAnimationFrame((ms) => this.#update(ms));
 
     return this;
   }
@@ -80,15 +85,18 @@ export class QuickMarquee {
     const totalWidth = fullWidths.reduce((a, b) => a + b, 0);
     const containerWidth = this.target.offsetWidth;
 
+    console.debug(this.target, totalWidth);
     const items: HTMLElement[] = [];
     let width = 0;
     let index = 0;
-    while (width < containerWidth + totalWidth) {
-      const item = this.#itemSources[index].cloneNode(true) as HTMLElement;
-      item.style.width = `${widths[index]}px`;
-      items.push(item);
-      width += fullWidths[index];
-      index = (index + 1) % widths.length;
+    if (totalWidth > 0) {
+      while (width < containerWidth + totalWidth) {
+        const item = this.#itemSources[index].cloneNode(true) as HTMLElement;
+        item.style.width = `${widths[index]}px`;
+        items.push(item);
+        width += fullWidths[index];
+        index = (index + 1) % widths.length;
+      }
     }
     this.#items = items;
     this.#totalWidth = totalWidth;
@@ -101,15 +109,24 @@ export class QuickMarquee {
     this.#busy = false;
   }
 
-  #update(): void {
-    if (this.#running) window.requestAnimationFrame(() => this.#update());
+  #update(ms: number): void {
+    if (this.#running) window.requestAnimationFrame((x) => this.#update(x));
 
     if (this.#busy) return;
 
+    if (this.#first) {
+      this.#ms = ms;
+      this.#first = false;
+      return;
+    }
+
+    const scale = (ms - this.#ms) / (1000 / 60);
+    this.#ms = ms;
+
     this.#offset =
       this.pixelsPerFrame > 0
-        ? (this.#offset + this.pixelsPerFrame) % this.#totalWidth
-        : (this.#offset + this.#totalWidth + this.pixelsPerFrame) %
+        ? (this.#offset + this.pixelsPerFrame * scale) % this.#totalWidth
+        : (this.#offset + this.#totalWidth + this.pixelsPerFrame * scale) %
           this.#totalWidth;
 
     this.#items.forEach((x) => {
